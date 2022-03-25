@@ -17,4 +17,4 @@ jobs:
     - name: Build the Docker image
       run: docker build . --file Dockerfile --tag timinh/php8.1-apache-for-symfony6:latest
     - name: Push the Docker image
-      run: docker login -u timinh -p ${{secrets.DOCKER_TOKEN}} && docker push timinh/php8.1-apache-for-symfony:latest
+      run: echo $secrets.DOCKER_TOKEN | docker login -u timinh --password-stdin && docker push timinh/php8.1-apache-for-symfony6:latest
