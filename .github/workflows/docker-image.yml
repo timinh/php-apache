@@ -1,0 +1,20 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag timinh/php8.1-apache-for-symfony6:latest
+    - name: Push the Docker image
+      run: docker login -u timinh -p ${{secrets.DOCKER_TOKEN}} && docker push timinh/php8.1-apache-for-symfony:latest
