@@ -14,6 +14,7 @@ RUN apt-get update \
     libcurl4-openssl-dev \
     libldb-dev \
     libldap2-dev \
+    libldap-common \
     libonig-dev \
     libbz2-dev \
     libicu-dev \
