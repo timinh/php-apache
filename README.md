@@ -6,7 +6,7 @@ A php 8.1 + apache dockerfile ready for symfony 6, laravel or any php project.
  - intl
  - mysqli
  - gd
- - ldqp
+ - ldap
  - gettext
  - calendar
  - ctype
@@ -21,3 +21,4 @@ A php 8.1 + apache dockerfile ready for symfony 6, laravel or any php project.
  - nano
  - composer
  - git
+ - cron

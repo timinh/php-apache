@@ -7,6 +7,7 @@ RUN apt-get update \
     git \
     nano \
     curl \
+    cron \
     libzip-dev \
     libxml2-dev \
     zlib1g-dev \
