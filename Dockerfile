@@ -43,6 +43,8 @@ RUN docker-php-ext-install \
 
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer 
 
+RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
+
 WORKDIR /var/www/html
 
 EXPOSE 80 443
