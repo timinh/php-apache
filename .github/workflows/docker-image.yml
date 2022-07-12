@@ -3,18 +3,25 @@ name: Docker Image CI
 on:
   push:
     branches: [ main ]
+    tags: [*]
   pull_request:
     branches: [ main ]
 
 jobs:
 
-  build:
-
+  build_and_publish:
+    name: Build and publish
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
+    - name: Get release tag
+      id: tag_name
+      run: echo ::set-output name=SOURCE_TAG::${GITHUB_REF#refs/tags}
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag timinh/php8.1-apache:latest
+      id: docker_build
+      run: docker build . --file Dockerfile --tag timinh/php-apache:latest
+      run: docker build . --file Dockerfile --tag timinh/php-apache:${{ steps.tag_name.outputs.SOURCE_TAG }}
     - name: Push the Docker image
-      run: docker login -u timinh -p ${{ secrets.DOCKER_TOKEN }} && docker push timinh/php8.1-apache:latest
+      id: docker_publish
+      run: docker login -u timinh -p ${{ secrets.DOCKER_TOKEN }} && docker push timinh/php-apache:latest && docker push timinh/php-apache:${{ steps.tag_name.outputs.SOURCE_TAG }}
