@@ -1,6 +1,7 @@
 FROM php:8.1-apache
 
-RUN a2enmod rewrite
+RUN a2enmod rewrite \
+    a2enmod http2
 
 RUN apt-get update \
     && apt-get install -y \
