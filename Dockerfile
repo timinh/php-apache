@@ -43,7 +43,8 @@ RUN docker-php-ext-install \
 	exif \
 	zip;
 
-RUN docker-php-ext-enable exif
+RUN docker-php-ext-configure exif \
+	--enable-exif
 
 RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer 
 
