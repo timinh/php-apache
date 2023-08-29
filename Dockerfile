@@ -1,5 +1,12 @@
 FROM php:8.2-apache
 
+ARG ARG_TIMEZONE=Europe/Paris
+ENV ENV_TIMEZONE ${ARG_TIMEZONE}
+
+RUN echo '$ENV_TIMEZONE' > /etc/timezone \
+    && ln -fsn /usr/share/zoneinfo/$ENV_TIMEZONE /etc/localtime \
+    && dpkg-reconfigure --frontend noninteractive tzdata
+
 RUN a2enmod rewrite http2
 
 RUN apt-get update \
