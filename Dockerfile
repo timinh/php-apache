@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:7.4-apache
 
 ARG ARG_TIMEZONE=Europe/Paris
 ENV ENV_TIMEZONE ${ARG_TIMEZONE}
@@ -13,6 +13,7 @@ RUN apt-get update \
 	&& apt-get install -y \
 	git \
 	nano \
+	vim \
 	curl \
 	cron \
 	libzip-dev \
@@ -48,6 +49,7 @@ RUN docker-php-ext-install \
 	pdo_mysql \
 	curl \
 	exif \
+	bcmath \
 	zip;
 
 RUN docker-php-ext-configure exif \
