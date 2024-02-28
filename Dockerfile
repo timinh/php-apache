@@ -64,7 +64,7 @@ RUN docker-php-ext-configure exif \
 
 RUN install-php-extensions @composer
 
-# RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
+RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
 
 WORKDIR /var/www/html
 
