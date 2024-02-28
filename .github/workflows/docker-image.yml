@@ -24,4 +24,4 @@ jobs:
       id: docker_publish
       env:
         SOURCE_TAG: ${{steps.tag_name.outputs.SOURCE_TAG}}
-      run: docker login -u timinh -p ${{ secrets.DOCKER_TOKEN }} && docker push timinh/php-apache:latest && docker push timinh/php-apache:${{ steps.tag_name.outputs.SOURCE_TAG }}
+      run: docker login -u timinh -p ${{ secrets.DOCKER_TOKEN }} && docker push timinh/php-apache:${{ steps.tag_name.outputs.SOURCE_TAG }} && docker push timinh/php-apache:latest
