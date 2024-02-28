@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.1-apache
 
 ARG ARG_TIMEZONE=Europe/Paris
 ENV ENV_TIMEZONE ${ARG_TIMEZONE}
@@ -32,8 +32,7 @@ RUN apt-get update \
 	librabbitmq-dev \
 	--no-install-recommends \
 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
-	&& pecl install amqp
+	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN docker-php-ext-install \
 	opcache \
@@ -52,6 +51,7 @@ RUN docker-php-ext-install \
 	curl \
 	exif \
 	bcmath \
+	amqp \
 	zip;
 
 RUN docker-php-ext-enable amqp
