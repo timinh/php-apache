@@ -34,7 +34,12 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN docker-php-ext-install \
+RUN curl -sSLf \
+        -o /usr/local/bin/install-php-extensions \
+        https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions && \
+    chmod +x /usr/local/bin/install-php-extensions
+
+RUN install-php-extensions \
 	opcache \
 	pdo \
 	intl \
@@ -54,16 +59,15 @@ RUN docker-php-ext-install \
 	amqp \
 	zip;
 
-RUN docker-php-ext-enable amqp
 RUN docker-php-ext-configure exif \
 	--enable-exif
 
-RUN curl -s https://getcomposer.org/installer | php -- --install-dir=/usr/bin --filename=composer 
+RUN install-php-extensions @composer
 
-RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
+# RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
 
 WORKDIR /var/www/html
 
-RUN usermod -u 1000 www-data
+# RUN usermod -u 1000 www-data
 
 EXPOSE 80 443
