@@ -1,4 +1,4 @@
-FROM php:8.3-apache
+FROM php:8.1-apache
 
 ARG ARG_TIMEZONE=Europe/Paris
 ENV ENV_TIMEZONE ${ARG_TIMEZONE}
@@ -29,9 +29,11 @@ RUN apt-get update \
 	libicu-dev \
 	libxslt-dev \
 	libssl-dev \
+	librabbitmq-dev \
 	--no-install-recommends \
 	&& apt-get clean \
-	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* \
+	&& pecl install amqp
 
 RUN docker-php-ext-install \
 	opcache \
@@ -52,6 +54,7 @@ RUN docker-php-ext-install \
 	bcmath \
 	zip;
 
+RUN docker-php-ext-enable amqp
 RUN docker-php-ext-configure exif \
 	--enable-exif
 
