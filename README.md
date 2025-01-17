@@ -16,6 +16,8 @@ A php apache dockerfile ready for symfony, laravel or any php project.
  - pdo_mysql
  - curl
  - zip
+ - amqp
+ - mongodb
 
 ### Contains the following utility programs : 
  - nano
