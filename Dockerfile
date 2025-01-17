@@ -17,6 +17,7 @@ RUN apt-get update \
 	vim \
 	curl \
 	cron \
+	supervisor \
 	libzip-dev \
 	libxml2-dev \
 	zlib1g-dev \
@@ -42,7 +43,6 @@ RUN curl -sSLf \
 
 RUN install-php-extensions \
 	opcache \
-	pdo \
 	intl \
 	mysqli \
 	gd \
@@ -58,6 +58,7 @@ RUN install-php-extensions \
 	exif \
 	bcmath \
 	amqp \
+	mongodb \
 	zip;
 
 RUN docker-php-ext-configure exif \
@@ -65,10 +66,32 @@ RUN docker-php-ext-configure exif \
 
 RUN install-php-extensions @composer
 
+# Gestion crons
+COPY ./cron /etc/cron.d/cron
+RUN chmod 0644 /etc/cron.d/cron
+RUN crontab /etc/cron.d/cron
+
 RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
 
 WORKDIR /var/www/html
 
 # RUN usermod -u 1000 www-data
 
+RUN mkdir -p /var/www/html/public
+RUN mkdir -p /var/www/html/var
+RUN mkdir -p /var/www/html/var/cache
+RUN mkdir -p /var/www/html/var/log
+RUN chmod -R 777 /var/www/html/var
+
+COPY ./vhost.conf /etc/apache2/sites-enabled/000-default.conf
+COPY ./php.ini /usr/local/etc/php/conf.d/app.ini
+
 EXPOSE 80 443
+
+COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
+RUN chmod +x /usr/local/bin/entrypoint.sh
+
+# Execute the entrypoint and start apache
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+
+CMD ["apache2-foreground"]
