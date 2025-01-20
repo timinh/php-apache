@@ -60,6 +60,7 @@ RUN install-php-extensions \
 	bcmath \
 	amqp \
 	mongodb \
+	soap \
 	zip;
 
 RUN docker-php-ext-configure exif \
