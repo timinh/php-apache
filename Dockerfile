@@ -2,10 +2,10 @@ ARG VERSION=8.4
 FROM php:${VERSION}-apache
 
 ARG ARG_TIMEZONE=Europe/Paris
-ENV ENV_TIMEZONE ${ARG_TIMEZONE}
+ENV ENV_TIMEZONE=${ARG_TIMEZONE}
 
-RUN echo '$ENV_TIMEZONE' > /etc/timezone \
-    && ln -fsn /usr/share/zoneinfo/$ENV_TIMEZONE /etc/localtime \
+RUN echo "$ENV_TIMEZONE" > /etc/timezone \
+	&& ln -fsn /usr/share/zoneinfo/"$ENV_TIMEZONE" /etc/localtime \
     && dpkg-reconfigure --frontend noninteractive tzdata
 
 RUN a2enmod rewrite http2
@@ -36,16 +36,14 @@ RUN apt-get update \
 	&& apt-get clean \
 	&& rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN curl -sSLf \
-        -o /usr/local/bin/install-php-extensions \
-        https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions && \
-    chmod +x /usr/local/bin/install-php-extensions
+RUN curl -fsSL \
+		-o /usr/local/bin/install-php-extensions \
+	https://github.com/mlocati/docker-php-extension-installer/releases/latest/download/install-php-extensions && chmod +x /usr/local/bin/install-php-extensions
 
 RUN install-php-extensions \
 	opcache \
 	intl \
 	mysqli \
-	supervisor \
 	gd \
 	ldap \
 	gettext \
@@ -60,11 +58,10 @@ RUN install-php-extensions \
 	bcmath \
 	amqp \
 	mongodb \
-	soap \
 	zip;
 
 RUN docker-php-ext-configure exif \
-	--enable-exif
+	&& docker-php-ext-configure soap --enable-soap
 
 RUN install-php-extensions @composer
 
@@ -75,14 +72,16 @@ RUN crontab /etc/cron.d/cron
 
 # RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
 
-WORKDIR /var/www/html
 
 # RUN usermod -u 1000 www-data
-
-RUN mkdir -p /var/www/html/publicsupervisor
+RUN groupmod -g 1000 www-data
+RUN mkdir -p /var/www/html/public
 
 COPY ./vhost.conf /etc/apache2/sites-enabled/000-default.conf
 COPY ./php.ini /usr/local/etc/php/conf.d/app.ini
+
+RUN mkdir -p /var/www/html/var/log \
+	&& chown -R www-data:www-data /var/www/html/var/log
 
 EXPOSE 80 443
 
