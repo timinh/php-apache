@@ -19,7 +19,7 @@ jobs:
       id: docker_build
       env:
         SOURCE_TAG: ${{steps.tag_name.outputs.SOURCE_TAG}}
-      run: docker build . --file Dockerfile --tag timinh/php-apache:latest && docker build . --file Dockerfile --build-args VERSION=${{ steps.tag_name.outputs.SOURCE_TAG }} --tag timinh/php-apache:${{ steps.tag_name.outputs.SOURCE_TAG }}
+      run: docker build . --file Dockerfile --tag timinh/php-apache:latest && docker build . --file Dockerfile --tag timinh/php-apache:${{ steps.tag_name.outputs.SOURCE_TAG }}
     - name: Push the Docker image
       id: docker_publish
       env:
