@@ -44,7 +44,8 @@ RUN curl -sSLf \
 RUN install-php-extensions \
 	opcache \
 	intl \
-	mysqli \supervisor
+	mysqli \
+	supervisor \
 	gd \
 	ldap \
 	gettext \
