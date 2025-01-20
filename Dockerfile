@@ -44,7 +44,7 @@ RUN curl -sSLf \
 RUN install-php-extensions \
 	opcache \
 	intl \
-	mysqli \
+	mysqli \supervisor
 	gd \
 	ldap \
 	gettext \
@@ -71,17 +71,13 @@ COPY ./cron /etc/cron.d/cron
 RUN chmod 0644 /etc/cron.d/cron
 RUN crontab /etc/cron.d/cron
 
-RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
+# RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
 
 WORKDIR /var/www/html
 
 # RUN usermod -u 1000 www-data
 
-RUN mkdir -p /var/www/html/public
-RUN mkdir -p /var/www/html/var
-RUN mkdir -p /var/www/html/var/cache
-RUN mkdir -p /var/www/html/var/log
-RUN chmod -R 777 /var/www/html/var
+RUN mkdir -p /var/www/html/publicsupervisor
 
 COPY ./vhost.conf /etc/apache2/sites-enabled/000-default.conf
 COPY ./php.ini /usr/local/etc/php/conf.d/app.ini
