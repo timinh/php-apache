@@ -98,6 +98,8 @@ EXPOSE 80 443
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 CMD ["apache2-foreground"]
 
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
