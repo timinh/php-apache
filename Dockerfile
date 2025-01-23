@@ -1,4 +1,4 @@
-ARG VERSION=7.4
+ARG VERSION=8.2
 FROM php:${VERSION}-apache
 
 ARG ARG_TIMEZONE=Europe/Paris
@@ -8,7 +8,7 @@ RUN echo "$ENV_TIMEZONE" > /etc/timezone \
 	&& ln -fsn /usr/share/zoneinfo/"$ENV_TIMEZONE" /etc/localtime \
     && dpkg-reconfigure --frontend noninteractive tzdata
 
-RUN a2enmod rewrite http2
+RUN a2enmod rewrite
 
 RUN apt-get update \
 	&& apt-get install -y \
@@ -58,6 +58,7 @@ RUN install-php-extensions \
 	bcmath \
 	amqp \
 	mongodb \
+	soap \
 	zip;
 
 RUN docker-php-ext-configure exif \
@@ -66,11 +67,20 @@ RUN docker-php-ext-configure exif \
 RUN install-php-extensions @composer
 
 # Gestion crons
-COPY ./cron /etc/cron.d/cron
-RUN chmod 0644 /etc/cron.d/cron
-RUN crontab /etc/cron.d/cron
+# Installation supercronic
+# Latest releases available at https://github.com/aptible/supercronic/releases
+ENV SUPERCRONIC_URL=https://github.com/aptible/supercronic/releases/download/v0.2.33/supercronic-linux-amd64 \
+    SUPERCRONIC_SHA1SUM=71b0d58cc53f6bd72cf2f293e09e294b79c666d8 \
+    SUPERCRONIC=supercronic-linux-amd64
 
-# RUN sed -i 's/^exec /service cron start\n\nexec /' /usr/local/bin/apache2-foreground
+RUN curl -fsSLO "$SUPERCRONIC_URL" \
+ && echo "${SUPERCRONIC_SHA1SUM}  ${SUPERCRONIC}" | sha1sum -c - \
+ && chmod +x "$SUPERCRONIC" \
+ && mv "$SUPERCRONIC" "/usr/local/bin/${SUPERCRONIC}" \
+ && ln -s "/usr/local/bin/${SUPERCRONIC}" /usr/local/bin/supercronic
+
+COPY ./supervisor/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./crontab /etc/crontabs/crontab
 
 
 # RUN usermod -u 1000 www-data
@@ -88,7 +98,6 @@ EXPOSE 80 443
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-# Execute the entrypoint and start apache
-ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-
 CMD ["apache2-foreground"]
+
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
