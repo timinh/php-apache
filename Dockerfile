@@ -1,4 +1,4 @@
-ARG VERSION=8.4
+ARG VERSION=7.4
 FROM php:${VERSION}-apache
 
 ARG ARG_TIMEZONE=Europe/Paris
@@ -99,7 +99,7 @@ EXPOSE 80 443
 COPY ./entrypoint.sh /usr/local/bin/entrypoint.sh
 RUN chmod +x /usr/local/bin/entrypoint.sh
 
-RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
+# RUN echo "ServerName localhost" >> /etc/apache2/apache2.conf
 
 ENV COMPOSER_ALLOW_SUPERUSER=1
 
