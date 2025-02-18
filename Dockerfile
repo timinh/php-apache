@@ -59,6 +59,7 @@ RUN install-php-extensions \
 	amqp \
 	mongodb \
 	soap \
+	oci8 \
 	zip;
 
 RUN docker-php-ext-configure exif \
