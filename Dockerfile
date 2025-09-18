@@ -57,7 +57,7 @@ RUN install-php-extensions \
 	exif \
 	bcmath \
 	amqp \
-	mongodb-1.21.0 \
+	mongodb \
 	soap \
 	oci8 \
 	zip;
