@@ -1,4 +1,4 @@
-ARG VERSION=8.4
+ARG VERSION=7.4
 FROM php:${VERSION}-apache
 
 ARG ARG_TIMEZONE=Europe/Paris
@@ -57,7 +57,7 @@ RUN install-php-extensions \
 	exif \
 	bcmath \
 	amqp \
-	mongodb \
+	mongodb-1.21.0 \
 	soap \
 	oci8 \
 	zip;
