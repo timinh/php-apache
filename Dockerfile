@@ -1,4 +1,4 @@
-ARG VERSION=8.4
+ARG VERSION=8.5
 FROM php:${VERSION}-apache
 
 ARG ARG_TIMEZONE=Europe/Paris
